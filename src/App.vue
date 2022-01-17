@@ -1,15 +1,38 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+<div class="col">
+  <textarea
+    v-model="msg"
+    placeholder="Write a message"
+    rows="10"
+    @keydown.enter.exact.prevent="sendMessage"
+    @keydown.shift.enter.exact.prevent="addNewLine"
+  ></textarea>
+
+  <div>Message here: {{ msg }}</div>
+</div>
+
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+  },
+  methods: {
+    sendMessage() {
+      console.log('Enter is clicked');
+    },
+    addNewLine() {
+      console.log('Shift + Enter are clicked');
+      this.msg += '\n';
+    }
+  },
+  data() {
+    return {
+      msg: ''
+    }
   }
 }
 </script>
@@ -22,5 +45,10 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
 }
 </style>
