@@ -6,32 +6,59 @@
     placeholder="Write a message"
     rows="10"
     @keydown.enter.exact.prevent="sendMessage"
-    @keydown.shift.enter.exact.prevent="addNewLine"
   ></textarea>
 
   <div>Message here: {{ msg }}</div>
+  <div>Submitted messages:
+    <ul>
+      <li v-for="(message, index) in messages" :key="index" style="white-space: pre; text-align: left;">{{ message }}</li>
+    </ul>
+  </div>
+
+  <button type="button" @click="sendNotification">Send browser notification</button>
 </div>
 
 </template>
 
 <script>
-
 export default {
   name: 'App',
   components: {
   },
   methods: {
     sendMessage() {
-      console.log('Enter is clicked');
+      console.log('Enter is clicked', this.msg);
+      this.messages.push(this.msg);
+      this.msg = '';
     },
     addNewLine() {
       console.log('Shift + Enter are clicked');
       this.msg += '\n';
+    },
+    sendNotification() {
+      if  (!("Notification" in window)) {
+        alert("This browser does not support desktop notification");
+      }
+
+      else if (Notification.permission === 'granted') {
+        var notification = new Notification("Customer requests for assistance");
+        console.log(notification);
+      }
+
+      else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then(function (permission) {
+          if (permission === 'granted') {
+            var notification = new Notification("Permission granted");
+            console.log(notification);
+          }
+        })
+      }
     }
   },
   data() {
     return {
-      msg: ''
+      msg: '',
+      messages: []
     }
   }
 }
